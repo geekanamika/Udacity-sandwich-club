@@ -41,7 +41,6 @@ public class JsonUtils {
             }
 
             sandwich = new Sandwich(mainName, alsoKnownAsList, placeOfOrigin, description, image, ingredientsList);
-            Log.d("myTag", ""+ mainName + " " + " " + placeOfOrigin + " "+ description + " " + image);
             return sandwich;
 
         } catch (JSONException e) {

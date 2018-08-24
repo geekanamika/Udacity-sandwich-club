@@ -3,9 +3,12 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
+        <item name="android:colorActivatedHighlight">@color/secondaryColor</item>
+        <item name="android:textColor">@color/secondaryTextColor</item>
+        <item name="android:windowBackground">@color/primaryTextColor</item>
     </style>
 
     <!-- My tool bar -->
@@ -13,6 +16,7 @@
     <style name="ToolbarTextAppearance">
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:shadowDx">1</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
         <item name="android:shadowDy">1</item>
         <item name="android:shadowRadius">2</item>
     </style>

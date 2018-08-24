@@ -1,23 +1,16 @@
 package com.udacity.sandwichclub;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
-import android.text.method.ScrollingMovementMethod;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
 
@@ -25,7 +18,9 @@ public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_POSITION = "extra_position";
     private static final int DEFAULT_POSITION = -1;
-    ImageView ingredientsIv;
+    private ImageView ingredientsIv;
+    private AppBarLayout appBarLayout;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,33 +33,50 @@ public class DetailActivity extends AppCompatActivity {
         if (intent == null) {
             closeOnError();
         }
+        if (intent != null) {
+            int position = intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
+            if (position == DEFAULT_POSITION) {
+                // EXTRA_POSITION not found in intent
+                closeOnError();
+                return;
+            }
 
-        int position = intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
-        if (position == DEFAULT_POSITION) {
-            // EXTRA_POSITION not found in intent
-            closeOnError();
-            return;
+            String[] sandwiches = getResources().getStringArray(R.array.sandwich_details);
+            String json = sandwiches[position];
+            Sandwich sandwich = JsonUtils.parseSandwichJson(json);
+            if (sandwich == null) {
+                // Sandwich data unavailable
+                closeOnError();
+                return;
+            }
+
+            init(sandwich);
+
+            //populateUI(sandwich);
+            Picasso.with(this)
+                    .load(sandwich.getImage())
+                    .into(ingredientsIv);
+            toolbarSetUp(sandwich);
+
         }
 
-        String[] sandwiches = getResources().getStringArray(R.array.sandwich_details);
-        String json = sandwiches[position];
-        Sandwich sandwich = JsonUtils.parseSandwichJson(json);
-        if (sandwich == null) {
-            // Sandwich data unavailable
-            closeOnError();
-            return;
-        }
 
-        init(sandwich);
 
-        populateUI(sandwich);
-        Picasso.with(this)
-                .load(sandwich.getImage())
-                .into(ingredientsIv);
-        Toolbar toolbar = findViewById(R.id.anim_toolbar);
+    }
+
+    private void toolbarSetUp(Sandwich sandwich) {
+        toolbar = findViewById(R.id.anim_toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(sandwich.getMainName());
 
+//        appBarLayout = findViewById(R.id.appbar);
+//        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+//            @Override
+//            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+//
+//            }
+//        });
     }
 
     private void init(Sandwich sandwich) {
@@ -86,40 +98,52 @@ public class DetailActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
 
-    private void populateUI(Sandwich sandwich) {
+//    private void populateUI(Sandwich sandwich) {
+//
+//        int imageDimension = ingredientsIv.getMaxWidth();
+//        Log.d("myTag", " "+ imageDimension);
+//        Picasso.with(DetailActivity.this)
+//                .load(sandwich.getImage())
+//                .resize(imageDimension, imageDimension)
+//                .centerCrop()
+//                .into(new Target() {
+//                    @Override
+//                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//                        ingredientsIv.setImageBitmap(bitmap);
+//                        Palette.from(bitmap)
+//                                .generate(new Palette.PaletteAsyncListener() {
+//                                    @Override
+//                                    public void onGenerated(@NonNull Palette palette) {
+//                                        CollapsingToolbarLayout collapsingTool;
+//                                        collapsingTool = findViewById(R.id.collapsing_toolbar);
+//                                        int darkVibrantColor = palette.getDarkVibrantColor(R.attr.colorPrimary);
+//                                        collapsingTool.setContentScrimColor(darkVibrantColor);
+//                                        Log.d("myTag", " "+ darkVibrantColor);
+//
+//                                        toolbar.setBackgroundColor(darkVibrantColor);
+//
+//                                    }
+//                                });
+//                    }
+//
+//                    @Override
+//                    public void onBitmapFailed(Drawable errorDrawable) {
+//                        Log.d("myTag", "failed");
+//                    }
+//
+//                    @Override
+//                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+//
+//                    }
+//                });
+//    }
 
-        int imageDimension = ingredientsIv.getMaxWidth();
-
-        Picasso.with(DetailActivity.this)
-                .load(sandwich.getImage())
-                .resize(imageDimension, imageDimension)
-                .centerCrop()
-                .into(new Target() {
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        ingredientsIv.setImageBitmap(bitmap);
-                        Palette.from(bitmap)
-                                .generate(new Palette.PaletteAsyncListener() {
-                                    @Override
-                                    public void onGenerated(Palette palette) {
-                                        CollapsingToolbarLayout collapsingTool;
-                                        collapsingTool = findViewById(R.id.collapsing_toolbar);
-                                        int mutedColor = palette.getVibrantColor(R.attr.colorPrimary);
-                                        collapsingTool.setContentScrimColor(mutedColor);
-
-                                    }
-                                });
-                    }
-
-                    @Override
-                    public void onBitmapFailed(Drawable errorDrawable) {
-
-                    }
-
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                    }
-                });
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        if(item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return true;
     }
 }

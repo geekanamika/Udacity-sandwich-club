@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="240dp"
+    android:layout_margin="4dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="8dp"
+    android:elevation="4dp"
+    app:cardMaxElevation="8dp"
+    tools:ignore="UnusedAttribute">
+
+    <ImageView
+        android:id="@+id/item_image"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/sandwich_picture_content_description" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/scrim" />
+    <TextView
+        android:id="@+id/item_sandwich_name"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom"
+        android:gravity="bottom"
+        android:textColor="@color/primaryTextColor"
+        android:layout_margin="8dp"
+        android:paddingLeft="8dp"
+        android:text="Bosna"
+        android:textSize="24sp"
+        android:paddingStart="8dp"
+        tools:ignore="RtlSymmetry" />
+</android.support.v7.widget.CardView>

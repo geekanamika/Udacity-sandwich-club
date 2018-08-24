@@ -3,11 +3,11 @@ package com.udacity.sandwichclub;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+
+import com.udacity.sandwichclub.adapters.SandwichAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,18 +20,21 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.app_name);
 
         String[] sandwiches = getResources().getStringArray(R.array.sandwich_names);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, sandwiches);
 
-        // Simplification: Using a ListView instead of a RecyclerView
-        ListView listView = findViewById(R.id.sandwiches_listview);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        RecyclerView recyclerView = findViewById(R.id.sandwiches_recycler_view);
+        // use this setting to improve performance of the RecyclerView
+        recyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(mLayoutManager);
+        SandwichAdapter sandwichAdapter = new SandwichAdapter(sandwiches, this, new SandwichAdapter.SandwichItemListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                launchDetailActivity(position);
+            public void onItemClicked(int i) {
+                launchDetailActivity(i);
             }
         });
+        recyclerView.setAdapter(sandwichAdapter);
     }
 
     private void launchDetailActivity(int position) {
